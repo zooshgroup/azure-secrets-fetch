@@ -6,8 +6,6 @@ const ini = require('ini');
 
 const AZURE_PROFILE = process.env.AZURE_PROFILE || 'default';
 
-
-
 try {
   if (!process.env.APPSETTING_WEBSITE_SITE_NAME) {
     // when running locally
@@ -24,8 +22,9 @@ try {
       clientSecret: profileCredentials.client_secret,
       tenantId: profileCredentials.tenant_id,
     }
+  } else {
+    module.exports = {};
   }
-  module.exports = {};
 } catch (err) {
   module.exports = {};
 }

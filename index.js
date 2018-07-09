@@ -1,12 +1,8 @@
-const getParametersByPath = require('./azureSecrets');
-
-const getParametersByPathSync = require('./azureSecretsSync');
-
-
-console.log(getParametersByPathSync('/smartoffice/prod'));
+const getParametersFromVault = require('./azureSecrets');
+const getParametersFromVaultSync = require('./azureSecretsSync');
 
 module.exports = {
-  getParametersByPath,
-  getParametersByPathSync,
+  getParametersFromVault,
+  getParametersFromVaultSync,
 };
 
