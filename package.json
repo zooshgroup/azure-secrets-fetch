@@ -1,5 +1,5 @@
 {
-  "name": "azure-secrets-fetch",
+  "name": "@zooshgroup/azure-secrets-fetch",
   "version": "0.1.0",
   "description": "",
   "main": "index.js",
