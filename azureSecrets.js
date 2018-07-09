@@ -1,31 +1,19 @@
 const KeyVault = require('azure-keyvault');
 const AuthenticationContext = require('adal-node').AuthenticationContext;
 const R = require('ramda');
+const msRestAzure = require('ms-rest-azure');
 
-const clientId = '4a37b788-e7be-45a7-ae26-bf1d75e84d1e';
-const clientSecret = '+3cSfymtpCMQcEVZre9eh6KeJi1bZ/an1SsTiyj9eYo=';
+const { clientId, clientSecret, tenantId } = require('./localCredentials');
+
 const vaultUri = 'https://smartoffice-test.vault.azure.net/';
 
-// Authenticator - retrieves the access token
-const authenticator = (challenge, callback) => {
-  const { authorization, resource } = challenge;
-  // Create a new authentication context.
-  const context = new AuthenticationContext(authorization);
-
-  // Use the context to acquire an authentication token.
-  return context.acquireTokenWithClientCredentials(resource, clientId, clientSecret,
-    (err, tokenResponse) => {
-      if (err) throw err;
-      // Calculate the value to be set in the request's Authorization header and resume the call.
-      const authorizationValue = `${tokenResponse.tokenType} ${tokenResponse.accessToken}`;
-
-      return callback(null, authorizationValue);
-    });
-};
-
-const credentials = new KeyVault.KeyVaultCredentials(authenticator);
-const client = new KeyVault.KeyVaultClient(credentials);
-
+async function authenticate() {
+  if (process.env.APPSETTING_WEBSITE_SITE_NAME) {
+    return msRestAzure.loginWithAppServiceMSI({ resource: 'https://vault.azure.net' });
+  } else {
+    return msRestAzure.loginWithServicePrincipalSecret(clientId, clientSecret, tenantId);
+  }
+}
 
 const translateToAzurePath = (path) => {
   if (path.startsWith('/')) {
@@ -40,6 +28,9 @@ const createConfigObject = (secretList) => {
 };
 
 const getParametersByPath = async (path) => {
+  const credentials = await authenticate();
+  const client = new KeyVault.KeyVaultClient(credentials);
+
   const azurePath = translateToAzurePath(path);
   const secretList = await client.getSecrets(vaultUri);
 
