@@ -1,6 +1,6 @@
 {
   "name": "keyvault",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "adal-node": "0.1.28",
     "azure-keyvault": "3.0.4",
     "exec-file-sync": "2.0.2",
     "ini": "1.3.5",
