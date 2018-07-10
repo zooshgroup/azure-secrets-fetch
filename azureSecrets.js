@@ -25,6 +25,7 @@ const getParametersFromVault = async (vaultUri) => {
 
   const secretsUri = url.resolve(vaultUri, 'secrets/');
   const secretNamesOnPath = secretList
+    .filter((secret) => secret.attributes.enabled === true)
     .map(({ id }) => id.replace(secretsUri, ''));
 
   const parsedSecretPromises = secretNamesOnPath.map(async (secretName) => {
